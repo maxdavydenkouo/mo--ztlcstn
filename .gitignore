@@ -1,0 +1,14 @@
+# sys
+venv
+__pycache__
+
+# ide
+*-workspace
+.idea
+
+# dirs
+
+# files
+*.db
+*.log
+creds.py
