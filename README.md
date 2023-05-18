@@ -8,7 +8,7 @@
 # plan
 - [x] init
 - [x] back (base)
-- [ ] front (base)
+- [x] front (base)
 - [ ] D3.js (graph integration)
 - [ ] testing
 - [ ] logging
