@@ -7,7 +7,7 @@
 
 # plan
 - [x] init
-- [ ] back (base)
+- [x] back (base)
 - [ ] front (base)
 - [ ] D3.js (graph integration)
 - [ ] testing
