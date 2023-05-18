@@ -111,7 +111,7 @@ def random_string(min_lenght=8, max_length=8):
 def random_link_type():
     return random.choice(list(LinkType)).value['id']
 
-def generate_mock_nodes(count):
+def generate_dummy_nodes(count):
     nodes = []
     for _ in count:
         nodes.append({
@@ -125,7 +125,7 @@ def generate_mock_nodes(count):
         })
     return nodes 
 
-def generate_mock_links(links_count, nodels_count):
+def generate_dummy_links(links_count, nodels_count):
     links = []
     for _ in links_count:
         links.append({
@@ -140,17 +140,17 @@ def generate_mock_links(links_count, nodels_count):
 
 # ===============================================================================
 # service
-def fill_mock_data_to_db(db):
+def fill_dummy_data_to_db(db):
     nodes_count = 50
     links_count = 30
 
-    mock_nodes = generate_mock_nodes(nodes_count)
-    for node in mock_nodes:
+    dummy_nodes = generate_dummy_nodes(nodes_count)
+    for node in dummy_nodes:
         db.merge(Node(**node))
         db.commit()
 
-    mock_links = generate_mock_links(links_count, nodes_count)
-    for link in mock_links:
+    dummy_links = generate_dummy_links(links_count, nodes_count)
+    for link in dummy_links:
         db.merge(Link(**link))
         db.commit()
 
@@ -196,7 +196,7 @@ def read_link(item_id: int, q: Union[str, None] = None, db: Session = Depends(ge
 # rpc
 @app.get("/api/db_fill")
 def read_link(q: Union[str, None] = None, db: Session = Depends(get_db)):
-    fill_mock_data_to_db(db)
+    fill_dummy_data_to_db(db)
     return {"success": True,}
 
 
