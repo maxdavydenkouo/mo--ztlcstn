@@ -157,22 +157,34 @@ def fill_dummy_data_to_db(db):
 
 # ===============================================================================
 # controller
+# ----------------------------------------
+# page
 @app.get("/")
 async def root():
     return FileResponse('web/index.html')
-
-@app.get("/wallpaper.jpg")
-async def web_wallpaper():
-    return FileResponse('web/wallpaper.jpg')
 
 @app.get("/favicon.ico")
 async def web_favicon():
     return FileResponse('web/favicon.ico')
 
-@app.get("/vue.js")
-async def web_vuejs():
-    return FileResponse('web/vue.js')
+@app.get("/wallpaper.jpg")
+async def web_wallpaper():
+    return FileResponse('web/wallpaper.jpg')
 
+@app.get("/style.css")
+async def web_vuejs():
+    return FileResponse('web/style.css')
+
+@app.get("/script_d3.js")
+async def web_vuejs():
+    return FileResponse('web/script_d3.js')
+
+@app.get("/script_vue.js")
+async def web_vuejs():
+    return FileResponse('web/script_vue.js')
+
+# ----------------------------------------
+# api
 @app.get("/api/nodes")
 def read_nodes(q: Union[str, None] = None, db: Session = Depends(get_db)):
     return {
@@ -205,6 +217,7 @@ def read_link(item_id: int, q: Union[str, None] = None, db: Session = Depends(ge
         "description": ""
     }
 
+# ----------------------------------------
 # rpc
 @app.get("/api/db_fill")
 def read_link(q: Union[str, None] = None, db: Session = Depends(get_db)):

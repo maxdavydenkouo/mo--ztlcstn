@@ -1,142 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Parts Category Predictor</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>Parts Category Predictor</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 </head>
 <body>
-    <img class="bg" src="wallpaper.jpg" alt="">
-    <style>
-        .bg {
-          position: fixed; 
-          top: 0; 
-          left: 0; 
-              
-          /* Preserve aspet ratio */
-          min-width: 100%;
-          min-height: 100%;
-          z-index: -10;
-        }
-        #app {
-          padding: 20px;
-        }
-        .error-message-popup {
-          position: absolute;
-          bottom: 0;
-          color: rgb(202, 202, 202);
-          right: 0;
-          padding: 20px;
-          border-color: rgb(255, 0, 0);
-          border-width: 1px;
-          border-style: solid;
-          border-radius: 10px;
-          width: 300px;
-          height: 150px;
-          margin: 20px;
-          background-color: #fa232352;
-        }
-        .table-container {
-          background-color: #f0ffff82; 
-          border-radius: 5px; 
-          padding: 5px;
-          margin: 10px 0px;
-        }
-        .table-bottom-cleared-name {
-          background-color: #ffffffb8;
-          margin: 5px;
-          padding: 5px;
-          border-radius: 5px;
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <div id="app">
-        <div>
-          <div class="btn-group me-2" role="group" aria-label="Second group" style="padding-bottom: 10px">
-            <button type="button" class="btn btn-secondary"><a class="link-light" style="text-decoration: none" href=".">Home</a></button>
-            <button type="button" class="btn btn-secondary"><a class="link-light" style="text-decoration: none" href="some/">Some</a></button>
-          </div>
-        </div>
-        <div v-if="is_error_message_exists" @click="close_error_message" type="button" class="btn-group error-message-popup">{{error_message}}</div>
+  <!----------------------------------------------------------------------------->
+  <!-- import -->
+  <img class="bg" src="wallpaper.jpg" alt="">
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  
+  <!----------------------------------------------------------------------------->
+  <!-- body -->
+  <div id="app">
+    <div>
+      <div class="btn-group me-2" role="group" aria-label="Second group" style="padding-bottom: 10px">
+        <button type="button" class="btn btn-secondary"><a class="link-light" style="text-decoration: none" href=".">Home</a></button>
+        <button type="button" class="btn btn-secondary"><a class="link-light" style="text-decoration: none" href="some/">Some</a></button>
+      </div>
     </div>
+    <div v-if="is_error_message_exists" @click="close_error_message" type="button" class="btn-group error-message-popup">{{error_message}}</div>
+  </div>
 
 
-
-
-    <!----------------------------------------------------------------------------->
-    <script>
-        const { createApp } = Vue
-      
-        createApp({
-          data() {
-            return {
-              nodes: [],
-              links: [],
-              is_payload_exists: false,
-              error_message: "",
-              error_message_on: false
-            }
-          },
-          created() {
-            //let q = new URLSearchParams(window.location.search.substring(1)).get("q");
-            this.get_nodes();
-            this.get_links();
-          },
-          methods: {
-            async get_nodes() {
-              return this.get_items('nodes');
-            },
-            async get_links() {
-              return this.get_items('links');
-            },
-            async get_items(item) {
-              // get items by axios request
-              let res = await axios.get('api/' + item);
-              if (res.data.success == true) {
-                let payload = res.data.payload;
-
-                // map
-                if (item == 'nodes') {
-                  this.nodes = payload;
-                } else if (item == 'links') {
-                  this.links = payload;
-                }
-              } else {
-                // errors
-                this.error_message = res.data.description;
-                this.error_message_on = true;
-              }
-            },
-            async save_as_relevant() {
-              if (this.is_payload_exists == true && this.response.name != "") {
-                let res = await axios.post('predict/saved?q=' + encodeURIComponent(this.response.name));
-                if (res.data.meta.success == false) {
-                  this.arise_error(res.data.meta.description);  
-                } else {
-                  this.response.is_saved = true;
-                  this.response.saved_id = res.data.payload.id;
-                }
-              } else {
-                this.arise_error("can't save item by empty name value");
-              }
-            },
-            arise_error(message) {
-              this.error_message = message;
-              this.error_message_on = true;
-            },
-            close_error_message() {
-              this.error_message = "";
-              this.error_message_on = !this.is_error_message_exists;
-            }
-          }
-        }).mount('#app')
-    </script>
-    <!----------------------------------------------------------------------------->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
+  <!----------------------------------------------------------------------------->
+  <!-- scripts -->
+  <script src="script_vue.js"></script>
+  <script src="script_d3.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
 </body>
 </html>

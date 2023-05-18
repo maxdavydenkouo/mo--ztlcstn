@@ -1,0 +1,40 @@
+.bg {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+        
+    /* Preserve aspet ratio */
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -10;
+  }
+  #app {
+    padding: 20px;
+  }
+  .error-message-popup {
+    position: absolute;
+    bottom: 0;
+    color: rgb(202, 202, 202);
+    right: 0;
+    padding: 20px;
+    border-color: rgb(255, 0, 0);
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 10px;
+    width: 300px;
+    height: 150px;
+    margin: 20px;
+    background-color: #fa232352;
+  }
+  .table-container {
+    background-color: #f0ffff82; 
+    border-radius: 5px; 
+    padding: 5px;
+    margin: 10px 0px;
+  }
+  .table-bottom-cleared-name {
+    background-color: #ffffffb8;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 5px;
+  }
