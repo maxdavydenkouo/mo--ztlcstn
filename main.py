@@ -67,7 +67,7 @@ class Node(Base):
     coord_z = Column(Float, nullable=True)
     description = Column(String, nullable=True)
     time_created = Column(DateTime(timezone=True), server_default=func.now())
-    time_updated = Column(DateTime(timezone=True), onupdate=func.now())
+    #time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 
     index_name = Index('index_node_name', name)
     index_description = Index('index_node_description', description)
@@ -83,7 +83,7 @@ class Link(Base):
     child_id = Column(Integer, ForeignKey("nodes.id"), index=True, nullable=False)
     description = Column(String, nullable=True)
     time_created = Column(DateTime(timezone=True), server_default=func.now())
-    time_updated = Column(DateTime(timezone=True), onupdate=func.now())
+    #time_updated = Column(DateTime(timezone=True), onupdate=func.now())
 
     # Indexes
     index_description = Index('index_link_description', description)
@@ -93,7 +93,7 @@ class Changes(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     node_id = Column(Integer, ForeignKey("nodes.id"), index=True, nullable=True)
-    link_id = Column(Integer, ForeignKey("linkes.id"), index=True, nullable=True)
+    link_id = Column(Integer, ForeignKey("links.id"), index=True, nullable=True)
     time = Column(DateTime(timezone=True), server_default=func.now())
     old_state = Column(JSON, nullable=False)
 
@@ -113,27 +113,27 @@ def random_link_type():
 
 def generate_dummy_nodes(count):
     nodes = []
-    for _ in count:
+    for _ in range(count):
         nodes.append({
-            "name": random_string(4, 8),
+            "name": random_string(4, 8).strip(),
             "type": random.choice(list(NodeType)).value['id'],
             "veight": random.randint(20, 50),
-            "coord_x": random.randfloat(0, 10),
-            "coord_y": random.randfloat(0, 10),
-            "coord_z": random.randfloat(0, 10),
-            "description": random_string(5, 20)
+            "coord_x": round(random.uniform(0, 10), 3),
+            "coord_y": round(random.uniform(0, 10), 3),
+            "coord_z": round(random.uniform(0, 10), 3),
+            "description": random_string(5, 20).strip()
         })
     return nodes 
 
 def generate_dummy_links(links_count, nodels_count):
     links = []
-    for _ in links_count:
+    for _ in range(links_count):
         links.append({
             "type": random.choice(list(LinkType)).value['id'],
             "veight": random.randint(20, 50),
             "parent_id": random.randint(1, nodels_count),
             "child_id": random.randint(1, nodels_count),
-            "description": random_string(5, 20)
+            "description": random_string(5, 20).strip()
         })
     return links 
 
@@ -160,6 +160,18 @@ def fill_dummy_data_to_db(db):
 @app.get("/")
 async def root():
     return FileResponse('web/index.html')
+
+@app.get("/wallpaper.jpg")
+async def web_wallpaper():
+    return FileResponse('web/wallpaper.jpg')
+
+@app.get("/favicon.ico")
+async def web_favicon():
+    return FileResponse('web/favicon.ico')
+
+@app.get("/vue.js")
+async def web_vuejs():
+    return FileResponse('web/vue.js')
 
 @app.get("/api/nodes")
 def read_nodes(q: Union[str, None] = None, db: Session = Depends(get_db)):
