@@ -4,7 +4,7 @@
   <meta charset='utf-8'>
   <meta http-equiv='X-UA-Compatible' content='IE=edge'>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <title>Parts Category Predictor</title>
+  <title>ZTLCSTN</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
@@ -17,25 +17,34 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-scale@4"></script>
 
   
   <!----------------------------------------------------------------------------->
   <!-- body -->
   <div id="app">
+    
+    <!-- menu -->
     <div>
       <div class="btn-group me-2" role="group" aria-label="Second group" style="padding-bottom: 10px">
         <button type="button" class="btn btn-secondary"><a class="link-light" style="text-decoration: none" href=".">Home</a></button>
         <button type="button" class="btn btn-secondary"><a class="link-light" style="text-decoration: none" href="some/">Some</a></button>
       </div>
     </div>
-    <div v-if="is_error_message_exists" @click="close_error_message" type="button" class="btn-group error-message-popup">{{error_message}}</div>
+
+    <!-- d3 container -->
+    <svg class="d3_container"></svg>
+
+    <!-- error popup-->
+    <div v-if="error_popup_on" @click="close_error_popup" type="button" class="btn-group error-message-popup">{{error_message}}</div>
+  
   </div>
 
 
   <!----------------------------------------------------------------------------->
   <!-- scripts -->
-  <script src="script_vue.js"></script>
   <script src="script_d3.js"></script>
+  <script src="script_vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
 </body>
 </html>
