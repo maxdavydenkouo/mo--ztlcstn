@@ -43,9 +43,13 @@ app = FastAPI()
 # ===============================================================================
 # models
 class NodeType(Enum):
-    DOMAIN = {"id": 1, "value": "domain"}
-    TOPIC  = {"id": 2, "value": "topic"}
-    LEAF   = {"id": 3, "value": "leaf"}
+    # hiararchy
+    DOMAIN  = {"id": 1, "value": "domain"}
+    TOPIC   = {"id": 2, "value": "topic"}
+    LEAF    = {"id": 3, "value": "leaf"}
+
+    # value params
+    MEASURE = {"id": 4, "value": "measure"} # importance / worth / urgency / ...
 
 class LinkType(Enum):
     HIERARCHY = {"id": 1, "value": "hierarchy"}
@@ -79,8 +83,8 @@ class Link(Base):
     active_on = Column(Boolean, default=True, nullable=False)
     type = Column(Integer, default=LinkType.HIERARCHY.value['id'], nullable=False)
     veight = Column(Integer, default=30, nullable=False) # from 0 to 100
-    parent_id = Column(Integer, ForeignKey("nodes.id"), index=True, nullable=False)
-    child_id = Column(Integer, ForeignKey("nodes.id"), index=True, nullable=False)
+    source_id = Column(Integer, ForeignKey("nodes.id"), index=True, nullable=False)
+    target_id = Column(Integer, ForeignKey("nodes.id"), index=True, nullable=False)
     description = Column(String, nullable=True)
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     #time_updated = Column(DateTime(timezone=True), onupdate=func.now())
@@ -113,26 +117,36 @@ def random_link_type():
 
 def generate_dummy_nodes(count):
     nodes = []
-    for _ in range(count):
+    for i in range(count):
+
+        # set null coordinates for the half of nodes to test forse simulation
+        cx = cy = None
+        if random.randint(1,2) == 1:
+            cx = round(random.uniform(0, 10), 3)
+            cy = round(random.uniform(0, 10), 3)
+
         nodes.append({
+            "id": i+1,
             "name": random_string(4, 8).strip(),
             "type": random.choice(list(NodeType)).value['id'],
             "veight": random.randint(20, 50),
-            "coord_x": round(random.uniform(0, 10), 3),
-            "coord_y": round(random.uniform(0, 10), 3),
+            "coord_x": cx,
+            "coord_y": cy,
             "coord_z": round(random.uniform(0, 10), 3),
             "description": random_string(5, 20).strip()
         })
+            
     return nodes 
 
 def generate_dummy_links(links_count, nodels_count):
     links = []
-    for _ in range(links_count):
+    for i in range(links_count):
         links.append({
+            "id": i+1,
             "type": random.choice(list(LinkType)).value['id'],
             "veight": random.randint(20, 50),
-            "parent_id": random.randint(1, nodels_count),
-            "child_id": random.randint(1, nodels_count),
+            "source_id": random.randint(1, nodels_count),
+            "target_id": random.randint(1, nodels_count),
             "description": random_string(5, 20).strip()
         })
     return links 
