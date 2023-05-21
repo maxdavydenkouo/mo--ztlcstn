@@ -21,15 +21,18 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
 - [x] front: basic structure
 - [x] front_d3: vue + d3 intargation with simple chart sample
 - [x] front_d3: graph network implementation
-- [ ] front_d3: basic graph interface interactions
+- [x] front_d3: basic graph interface capabilities
     - [x] force(gravity) / collision 
     - [x] nodes drag
-    - [ ] nodes highlight
-    - [ ] nodes size via value
-    - [ ] colors via types (nodes + links)
-    - [ ] map scale
-- [ ] front_d3: set graph network reactive via vue
-- [ ] front_d3: basic crud functionality via vue form + server requests
+    - [x] canvas zoom and pane
+    - [x] static coordinates
+- [ ] front_d3: vue reactivity (via vue data)
+- [ ] front_d3: crud (forms + server requests)
+    - [ ] canvas
+        - [ ] node select
+    - [ ] popup forms
+        - [ ] node
+        - [ ] link
     - [ ] create
         - [ ] nodes
         - [ ] links
@@ -39,20 +42,20 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
     - [ ] update
         - [ ] nodes
         - [ ] links
-- [ ] back: add testing
-- [ ] back: add logging
-- [ ] back: nodes and links crud functionality
-    - [ ] add
+- [ ] back: crud
+    - [ ] create
     - [ ] delete
     - [ ] update
-- [ ] front: basic interface functoinality
-    - [ ] canvas scaling
-    - [ ] node description popup
-    - [ ] node description edit
-    - [ ] change coordinates
+- [ ] back: testing
+- [ ] back: logging
 - [ ] front: wishes
+    - [x] graph size limits test (10.000 nodes + 15.000 links - done (tangible but handable performance degradation))
+    - [ ] nodes size via value
+    - [ ] colors via types (nodes + links)
+    - [ ] beautify
+    - [ ] select group of nodes
     - [ ] nodes collapse by hierarchy
-    - [ ] nodes highlighting
+    - [ ] highlight linked nodes of selected node
     - [ ] editable popup form with node/link details
         - ref: [https://stackoverflow.com/questions/5972705]
     - [ ] minimap (additional canvas or svg for navigation) - here's what vue used for

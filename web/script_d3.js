@@ -1,33 +1,20 @@
 function build_plot(graph) {
-    console.log(graph);
     // ----------------------------------------
     // Config
     // TEMP: hardcode canvas size
-    const width = 800;      // window.innerWidth
-    const height = 750;     // window.innerHeight
-
-    // ----------------------------------------
-    // Dummy graph data
-    /*
-    const graph = {
-        nodes: [
-            { id: 1, name: 'some_1' },
-            { id: 2, name: 'some_2' },
-            { id: 3, name: 'some_3' },
-        ],
-        links: [
-            { source_id: 1, target_id: 2 },
-            { source_id: 1, target_id: 3 },
-            { source_id: 1, target_id: 4 }, // broken link
-        ],
-    };
-    */
+    const width = 900;      // window.innerWidth
+    const height = 900;     // window.innerHeight
+  
+  	const NODE_RADIUS = 5;
+  	const TEXT_SIZE = 10;
 
     // ----------------------------------------
     // Prepare data
     // Fill sources and targets by id to implement d3 naming convention
     graph.links.map(link => link.source = link.source_id);
     graph.links.map(link => link.target = link.target_id);
+  	graph.nodes.map(node => node.fx = node.coord_x);
+  	graph.nodes.map(node => node.fy = node.coord_y);
 
     // Remove broken links (which has no associated nodes)
     function remove_broken_links(graph) {
@@ -38,17 +25,33 @@ function build_plot(graph) {
         )
         return valid_links;
     }
-
     graph.links = remove_broken_links(graph);
-
+  
+  	console.log(graph);
+  
+  
     // ----------------------------------------
     // Create the SVG container
     const svg = d3
         .select('#d3_container')
         .attr('width', width)
         .attr('height', height);
+  
+  	// ----------------------------------------
+  	// Zoom
+  	// Create a group for the zoomable area
+    const zoomGroup = svg.append("g");
 
-    // Create the force simulation
+    // Create the zoom behavior
+    const zoom = d3.zoom()
+        //.scaleExtent([0.1, 10]) // [DISABLED]: minimum and maximum zoom levels
+        .on("zoom", zoomed);
+
+    // Enable zoom and pan
+    svg.call(zoom);
+
+  	// ----------------------------------------
+  	// Simulation (create the force simulation)
     const simulation = d3
         .forceSimulation(graph.nodes)
         .force('link', d3.forceLink(graph.links).id((d) => d.id))
@@ -57,8 +60,18 @@ function build_plot(graph) {
 
     // ----------------------------------------
     // Render
+  	const center = zoomGroup
+    	.append('g')
+    	.attr('transform', (d) => `translate(${width / 2}, ${height / 2})`);
+    
+    center.append('circle')
+  		.attr('r', 200)
+    	.attr('fill', '#6ce2ff94')
+      .attr('stroke', '#6ce2ff50')
+      .attr('stroke-width', 200);
+  
     // Render the links
-    const link = svg
+    const link = zoomGroup
         .selectAll('.link')
         .data(graph.links)
         .enter()
@@ -68,24 +81,27 @@ function build_plot(graph) {
         .attr('stroke-opacity', 0.6);
 
     // Render the nodes
-    const node = svg
+    const node = zoomGroup
         .selectAll('.node')
         .data(graph.nodes)
         .enter()
         .append('g')
         .attr('class', 'node')
+    		//.attr('fx', (d) => d.fx = d.coord_x)
+    		//.attr('fy', (d) => d.fy = d.coord_y)
+    		.attr('transform', (d) => `translate(${d.coord_x}, ${d.coord_y})`)
         .call(drag(simulation)); // Enable node drag using the 'drag' function
 
     node
         .append('circle')
-        .attr('r', 10)
+        .attr('r', NODE_RADIUS)
         .attr('fill', '#ccc')
         .attr('stroke', '#fff')
         .attr('stroke-width', 1.5);
 
     node
         .append('text')
-        .attr('dx', 12)
+        .attr('dx', 0)
         .attr('dy', '.35em')
         .text((d) => d.name);
 
@@ -109,6 +125,7 @@ function build_plot(graph) {
             if (!event.active) simulation.alphaTarget(0);
             d.fx = d.x;
             d.fy = d.y;
+          	console.log(d);
         }
 
         return d3
@@ -129,7 +146,13 @@ function build_plot(graph) {
 
         node.attr('transform', (d) => `translate(${d.x}, ${d.y})`);
     });
-
+  
+  	// ----------------------------------------
+  	// Zoomed function to handle zooming and panning
+    function zoomed(e) {
+        zoomGroup.attr("transform", e.transform);
+    }
+  
     // ----------------------------------------
     // popup [look to README wish list for svg popup form solution reference]
     // Create a popup window
@@ -161,7 +184,8 @@ function build_plot(graph) {
 }
 
 // -------------------------------------------------
-// TEMP: sulution for manualy create plot without vue
+// TEMP: solution for manualy create plot without vue
+
 function init_d3_plot() {
     const graph = {};
     d3.json('http://localhost:8000/api/nodes').then(
@@ -175,4 +199,93 @@ function init_d3_plot() {
         });
     }
     );
+}
+
+function init_d3_plot_off() {
+  graph = {
+      nodes: [
+        {
+          active_on: true,
+          weight: 44,
+          id: 1,
+          coord_x: 400.844,
+          coord_y: 400.353,
+          coord_z: 8.418,
+          description: 'entdzhwcmtnz',
+          type: 4,
+          name: 'some_1',
+          time_created: '2023-05-21T14:58:43',
+        },
+        {
+          active_on: true,
+          weight: 26,
+          id: 2,
+          coord_x: 610.844,
+          coord_y: 540.353,
+          coord_z: 540.252,
+          description: 'vqeltlt',
+          type: 3,
+          name: 'some_2',
+          time_created: '2023-05-21T14:58:43',
+        },
+        {
+          active_on: true,
+          weight: 26,
+          id: 3,
+          coord_x: 480.844,
+          coord_y: 430.353,
+          coord_z: 430.252,
+          description: 'vqeltlt',
+          type: 3,
+          name: 'some_3',
+          time_created: '2023-05-21T14:58:43',
+        },
+        {
+          active_on: true,
+          weight: 26,
+          id: 4,
+          fx: 400.844,
+          fy: 400.353,
+          coord_z: 510.252,
+          description: 'vqeltlt',
+          type: 3,
+          name: 'some_4',
+          
+          time_created: '2023-05-21T14:58:43',
+        },
+      ],
+      links: [
+        {
+          source_id: 1,
+          active_on: true,
+          type: 3,
+          description: 'wsjzvtwfno',
+          id: 1,
+          weight: 45,
+          target_id: 2,
+          time_created: '2023-05-21T14:58:47',
+        },
+        {
+          source_id: 1,
+          active_on: true,
+          type: 5,
+          description: 'zufmfn ohthiuz',
+          id: 2,
+          weight: 36,
+          target_id: 3,
+          time_created: '2023-05-21T14:58:47',
+        },
+        {
+          source_id: 1,
+          active_on: true,
+          type: 3,
+          description: 'bnqungpwx loelf',
+          id: 3,
+          weight: 25,
+          target_id: 45,
+          time_created: '2023-05-21T14:58:47',
+        },
+      ],
+    };
+  	build_plot(graph);
 }

@@ -17,7 +17,7 @@ from sqlalchemy.sql import func
 # ===============================================================================
 # config
 DB_FILE = "app.db"
-MAX_RESPONSE_SIZE = 1024 * 1024 * 10 # 10MB
+
 
 # ===============================================================================
 # database
@@ -39,7 +39,7 @@ def get_db():
 # ===============================================================================
 # app
 app = FastAPI()
-# app.max_response_size = MAX_RESPONSE_SIZE
+# app.max_response_size = 1024 * 1024 * 10 # 10MB
 
 origins = [
     "http://localhost.tiangolo.com",
@@ -86,6 +86,7 @@ class Node(Base):
     coord_x = Column(Float, nullable=True)
     coord_y = Column(Float, nullable=True)
     coord_z = Column(Float, nullable=True)
+    #color = Column(String(length=7), nullable=True) # simply store HEX colors
     description = Column(String, nullable=True)
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     #time_updated = Column(DateTime(timezone=True), onupdate=func.now())
@@ -139,8 +140,8 @@ def generate_dummy_nodes(count):
         # set null coordinates for the half of nodes to test forse simulation
         cx = cy = None
         if random.randint(1,2) == 1:
-            cx = round(random.uniform(0, 10), 3)
-            cy = round(random.uniform(0, 10), 3)
+            cx = round(random.uniform(100, 800), 3) # hardcoce coordinates related to canvas size
+            cy = round(random.uniform(100, 800), 3) # hardcoce coordinates related to canvas size
 
         nodes.append({
             "id": i+1,
@@ -150,7 +151,7 @@ def generate_dummy_nodes(count):
             "coord_x": cx,
             "coord_y": cy,
             "coord_z": round(random.uniform(0, 10), 3),
-            "color": "#".join(random.choice("1234567890ABCDEF") for _ in range(6)),
+            #"color": "#".join(random.choice("1234567890ABCDEF") for _ in range(6)),
             "description": random_string(5, 20).strip()
         })
             
@@ -173,8 +174,8 @@ def generate_dummy_links(links_count, nodels_count):
 # ===============================================================================
 # service
 def fill_dummy_data_to_db(db):
-    nodes_count = 1000
-    links_count = 1500
+    nodes_count = 100
+    links_count = 150
 
     dummy_nodes = generate_dummy_nodes(nodes_count)
     for node in dummy_nodes:
