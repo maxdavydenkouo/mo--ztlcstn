@@ -7,6 +7,7 @@ import random
 import string
 from enum import Enum
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, Column, Integer, Float, String, ForeignKey, Boolean, Index, DateTime, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, sessionmaker
@@ -39,6 +40,21 @@ def get_db():
 # app
 app = FastAPI()
 
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # ===============================================================================
 # models
@@ -69,6 +85,7 @@ class Node(Base):
     coord_x = Column(Float, nullable=True)
     coord_y = Column(Float, nullable=True)
     coord_z = Column(Float, nullable=True)
+    color = Column(String(length=7), nullable=True) # simply store HEX colors
     description = Column(String, nullable=True)
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     #time_updated = Column(DateTime(timezone=True), onupdate=func.now())
@@ -133,6 +150,7 @@ def generate_dummy_nodes(count):
             "coord_x": cx,
             "coord_y": cy,
             "coord_z": round(random.uniform(0, 10), 3),
+            "color": "#".join(random.choice("1234567890ABCDEF") for _ in range(6)),
             "description": random_string(5, 20).strip()
         })
             
@@ -156,7 +174,7 @@ def generate_dummy_links(links_count, nodels_count):
 # service
 def fill_dummy_data_to_db(db):
     nodes_count = 50
-    links_count = 30
+    links_count = 50
 
     dummy_nodes = generate_dummy_nodes(nodes_count)
     for node in dummy_nodes:
