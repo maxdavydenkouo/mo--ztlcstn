@@ -20,7 +20,7 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
 - [x] back: basic structure
 - [x] front: basic structure
 - [x] front_d3: vue + d3 intargation with simple chart sample
-- [ ] front_d3: graph network implementation
+- [x] front_d3: graph network implementation
 - [ ] front_d3: basic graph interface interactions
     - [x] force(gravity) / collision 
     - [x] nodes drag
