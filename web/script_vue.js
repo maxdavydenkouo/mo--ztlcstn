@@ -18,11 +18,10 @@ createApp({
     },
     mounted() {
         // DOM has been mounted
-        init_d3_plot();
+        this.init_graph();
     },
     methods: {
-        async init_svg() {
-            // TODO: finish correct functionality
+        async init_graph() {
             this.graph.nodes = await this.get_items('nodes');
             this.graph.links = await this.get_items('links');
             build_plot(this.graph);

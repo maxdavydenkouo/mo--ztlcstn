@@ -67,8 +67,8 @@ function build_plot(graph) {
     center.append('circle')
   		.attr('r', 200)
     	.attr('fill', '#6ce2ff94')
-      .attr('stroke', '#6ce2ff50')
-      .attr('stroke-width', 200);
+        .attr('stroke', '#6ce2ff50')
+        .attr('stroke-width', 200);
   
     // Render the links
     const link = zoomGroup
@@ -76,9 +76,9 @@ function build_plot(graph) {
         .data(graph.links)
         .enter()
         .append('line')
-        .attr('class', 'link')
+        //.attr('class', 'link')
         .attr('stroke', '#999')
-        .attr('stroke-opacity', 0.6);
+        .attr('stroke-opacity', 0.4);
 
     // Render the nodes
     const node = zoomGroup
@@ -87,9 +87,9 @@ function build_plot(graph) {
         .enter()
         .append('g')
         .attr('class', 'node')
-    		//.attr('fx', (d) => d.fx = d.coord_x)
-    		//.attr('fy', (d) => d.fy = d.coord_y)
-    		.attr('transform', (d) => `translate(${d.coord_x}, ${d.coord_y})`)
+        //.attr('fx', (d) => d.fx = d.coord_x)
+        //.attr('fy', (d) => d.fy = d.coord_y)
+        //.attr('transform', (d) => `translate(${d.coord_x}, ${d.coord_y})`)
         .call(drag(simulation)); // Enable node drag using the 'drag' function
 
     node
@@ -101,8 +101,10 @@ function build_plot(graph) {
 
     node
         .append('text')
-        .attr('dx', 0)
-        .attr('dy', '.35em')
+        .attr('dx', 7)
+        //.attr('dy', '.35em')
+  		.attr('alignment-baseline', 'middle')
+        .style('pointer-events', 'none')
         .text((d) => d.name);
 
     // ----------------------------------------
