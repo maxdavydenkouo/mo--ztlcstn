@@ -40,7 +40,7 @@
 }
 
 /* d3 ---------------------------------------- */
-.d3_container {
+#d3_container {
   border: 1px solid #2268ff;
 }
 

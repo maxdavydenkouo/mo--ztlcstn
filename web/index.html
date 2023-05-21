@@ -33,7 +33,9 @@
     </div>
 
     <!-- d3 container -->
-    <svg class="d3_container"></svg>
+    <div>
+      <svg id="d3_container"></svg>
+    </div>
 
     <!-- error popup-->
     <div v-if="error_popup_on" @click="close_error_popup" type="button" class="btn-group error-message-popup">{{error_message}}</div>

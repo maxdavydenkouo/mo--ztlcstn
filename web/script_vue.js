@@ -3,31 +3,30 @@ const { createApp } = Vue
 createApp({
     data() {
         return {
-            nodes: [],
-            links: [],
+            graph: {
+                nodes: [],
+                links: [],
+            },
             is_payload_exists: false,
             error_message: "",
             error_popup_on: false,
-            DUMMY_DATA: [
-                {id: 1, value: 10, name: 'some'},
-                {id: 2, value: 13, name: 'mose'},
-                {id: 3, value: 31, name: 'abricos'},
-                {id: 4, value: 37, name: 'roga'},
-                {id: 5, value: 50, name: 'curaga'}
-            ]
         }
     },
     created() {
         // Vue instance is created
         //let q = new URLSearchParams(window.location.search.substring(1)).get("q");
-        this.nodes = this.get_items('nodes');
-        this.links = this.get_items('links');
     },
     mounted() {
         // DOM has been mounted
-        build_plot(this.DUMMY_DATA);
+        init_d3_plot();
     },
     methods: {
+        async init_svg() {
+            // TODO: finish correct functionality
+            this.graph.nodes = await this.get_items('nodes');
+            this.graph.links = await this.get_items('links');
+            build_plot(this.graph);
+        },
         async get_items(item) {
             // get items by axios request
             let res = await axios.get('api/' + item);
