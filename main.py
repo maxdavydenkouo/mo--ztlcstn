@@ -17,7 +17,7 @@ from sqlalchemy.sql import func
 # ===============================================================================
 # config
 DB_FILE = "app.db"
-
+MAX_RESPONSE_SIZE = 1024 * 1024 * 10 # 10MB
 
 # ===============================================================================
 # database
@@ -39,6 +39,7 @@ def get_db():
 # ===============================================================================
 # app
 app = FastAPI()
+# app.max_response_size = MAX_RESPONSE_SIZE
 
 origins = [
     "http://localhost.tiangolo.com",
@@ -80,12 +81,11 @@ class Node(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     active_on = Column(Boolean, default=True, nullable=False) 
     type = Column(Integer, default=NodeType.LEAF.value['id'], nullable=False)
-    veight = Column(Integer, default=30, nullable=False) # from 0 to 100
+    weight = Column(Integer, default=30, nullable=False) # from 0 to 100
     name = Column(String, nullable=False)
     coord_x = Column(Float, nullable=True)
     coord_y = Column(Float, nullable=True)
     coord_z = Column(Float, nullable=True)
-    color = Column(String(length=7), nullable=True) # simply store HEX colors
     description = Column(String, nullable=True)
     time_created = Column(DateTime(timezone=True), server_default=func.now())
     #time_updated = Column(DateTime(timezone=True), onupdate=func.now())
@@ -99,7 +99,7 @@ class Link(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     active_on = Column(Boolean, default=True, nullable=False)
     type = Column(Integer, default=LinkType.HIERARCHY.value['id'], nullable=False)
-    veight = Column(Integer, default=30, nullable=False) # from 0 to 100
+    weight = Column(Integer, default=30, nullable=False) # from 0 to 100
     source_id = Column(Integer, ForeignKey("nodes.id"), index=True, nullable=False)
     target_id = Column(Integer, ForeignKey("nodes.id"), index=True, nullable=False)
     description = Column(String, nullable=True)
@@ -146,7 +146,7 @@ def generate_dummy_nodes(count):
             "id": i+1,
             "name": random_string(4, 8).strip(),
             "type": random.choice(list(NodeType)).value['id'],
-            "veight": random.randint(20, 50),
+            "weight": random.randint(20, 50),
             "coord_x": cx,
             "coord_y": cy,
             "coord_z": round(random.uniform(0, 10), 3),
@@ -162,7 +162,7 @@ def generate_dummy_links(links_count, nodels_count):
         links.append({
             "id": i+1,
             "type": random.choice(list(LinkType)).value['id'],
-            "veight": random.randint(20, 50),
+            "weight": random.randint(20, 50),
             "source_id": random.randint(1, nodels_count),
             "target_id": random.randint(1, nodels_count),
             "description": random_string(5, 20).strip()
@@ -173,8 +173,8 @@ def generate_dummy_links(links_count, nodels_count):
 # ===============================================================================
 # service
 def fill_dummy_data_to_db(db):
-    nodes_count = 50
-    links_count = 50
+    nodes_count = 1000
+    links_count = 1500
 
     dummy_nodes = generate_dummy_nodes(nodes_count)
     for node in dummy_nodes:
