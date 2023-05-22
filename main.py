@@ -208,13 +208,9 @@ async def web_wallpaper():
 async def web_vuejs():
     return FileResponse('web/style.css')
 
-@app.get("/script_d3.js")
+@app.get("/script.js")
 async def web_vuejs():
-    return FileResponse('web/script_d3.js')
-
-@app.get("/script_vue.js")
-async def web_vuejs():
-    return FileResponse('web/script_vue.js')
+    return FileResponse('web/script.js')
 
 # ----------------------------------------
 # api
