@@ -7,6 +7,30 @@ createApp({
                 nodes: [],
                 links: [],
             },
+            node_edit: {
+                id: null,
+                is_active: null,
+                type: null,
+                weight: null,
+                name: null,
+                coord_x: null,
+                coord_y: null,
+                coord_z: null,
+                description: null,
+                time_created: null,
+                is_show: null,
+            },
+            link_edit: {
+                id: null,
+                is_active: null,
+                type: null,
+                weight: null,
+                source_id: null,
+                target_id: null,
+                description: null,
+                time_created: null,
+                is_show: null,
+            },
             is_payload_exists: false,
             error_message: "",
             error_popup_on: false,
@@ -25,6 +49,12 @@ createApp({
             this.graph.nodes = await this.get_items('nodes');
             this.graph.links = await this.get_items('links');
             build_plot(this.graph);
+
+            // TEMP: fill dummy data
+            this.node_edit = this.graph.nodes[12];
+            this.node_edit.is_show = true;
+            this.link_edit = this.graph.links[23];
+            this.link_edit.is_show = true;
         },
         async get_items(item) {
             // get items by axios request

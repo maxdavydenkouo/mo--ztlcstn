@@ -28,13 +28,111 @@
     <div>
       <div class="btn-group me-2" role="group" aria-label="Second group" style="padding-bottom: 10px">
         <button type="button" class="btn btn-secondary"><a class="link-light" style="text-decoration: none" href=".">Home</a></button>
-        <button type="button" class="btn btn-secondary"><a class="link-light" style="text-decoration: none" href="some/">Some</a></button>
+        <button type="button" class="btn btn-secondary"><a class="link-light" style="text-decoration: none" href="#">Some</a></button>
       </div>
     </div>
+    <!-- main container -->
+    <div class="main-container row">
+      <!-- d3 container -->
+      <div class="d3-container col">
+        <svg class="d3-container-svg"></svg>
+      </div>
 
-    <!-- d3 container -->
-    <div>
-      <svg id="d3_container"></svg>
+      <!-- edit from popup container -->
+      <div class="forms-container col" style="margin-top:10px" v-if="node_edit.is_show">
+        <div class="node-form">
+          <b style="font-size: 30px">NODE: {{node_edit.id}}</b> <span>[{{node_edit.time_created}}]</span>
+          <form>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="active" :checked="node_edit.is_active">
+              <label class="form-check-label" for="exampleCheck1">Active</label>
+            </div>
+            <div class="mb-3">
+              <div class="row g-3 align-items-center">
+                <div class="col-auto"><label for="name">name</label></div>
+                <div class="col-auto"><input :value="node_edit.name" type="text" class="form-control" id="name"></div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="row g-3 align-items-center">
+                <div class="col-auto"><label for="type">type</label></div>
+                <div class="col-auto"><input :value="node_edit.type"type="text" class="form-control" id="type"></div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="row g-3 align-items-center">
+                <div class="col-auto"><label for="weight">weight</label></div>
+                <div class="col-auto"><input :value="node_edit.weight" type="text" class="form-control" id="weight"></div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="row g-3 align-items-center">
+                <div class="col-auto"><label for="coord_x">coord_x</label></div>
+                <div class="col-auto"><input :value="node_edit.coord_x" type="text" class="form-control" id="coord_x"></div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="row g-3 align-items-center">
+                <div class="col-auto"><label for="coord_y">coord_y</label></div>
+                <div class="col-auto"><input :value="node_edit.coord_y" type="text" class="form-control" id="coord_y"></div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="row g-3 align-items-center">
+                <div class="col-auto"><label for="coord_z">coord_z</label></div>
+                <div class="col-auto"><input :value="node_edit.coord_z" type="text" class="form-control" id="coord_z"></div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <textarea :value="node_edit.description" class="form-control" id="description" rows="10"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </form>
+        </div>
+      </div>
+      <div class="forms-container col" style="margin-top:10px" v-if="link_edit.is_show">
+        <div class="link-form">
+          <b style="font-size: 30px">LINK: {{link_edit.id}}</b> <span>[{{link_edit.time_created}}]</span>
+          <form>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="active" :checked="link_edit.is_active">
+              <label class="form-check-label" for="exampleCheck1">Active</label>
+            </div>
+            <div class="mb-3">
+              <div class="row g-3 align-items-center">
+                <div class="col-auto"><label for="type">type</label></div>
+                <div class="col-auto"><input :value="link_edit.type"type="text" class="form-control" id="type"></div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="row g-3 align-items-center">
+                <div class="col-auto"><label for="weight">weight</label></div>
+                <div class="col-auto"><input :value="link_edit.weight" type="text" class="form-control" id="weight"></div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="row g-3 align-items-center">
+                <div class="col-auto"><label for="source_id">source_id</label></div>
+                <div class="col-auto"><input :value="link_edit.source_id" type="text" class="form-control" id="source_id"></div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="row g-3 align-items-center">
+                <div class="col-auto"><label for="target_id">target_id</label></div>
+                <div class="col-auto"><input :value="link_edit.target_id" type="text" class="form-control" id="target_id"></div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <textarea :value="link_edit.description" class="form-control" id="description" rows="10"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </form>
+        </div>
+        <!--
+        <button @click="create_node(el)" type="button" class="btn btn-success" style="padding: 0px 10px">Create</button>
+        <button @click="create_link(el)" type="button" class="btn btn-success" style="padding: 0px 10px">Create</button>
+        -->
+      </div>
     </div>
 
     <!-- error popup-->

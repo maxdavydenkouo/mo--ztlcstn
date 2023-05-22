@@ -13,8 +13,14 @@ function build_plot(graph) {
     // Fill sources and targets by id to implement d3 naming convention
     graph.links.map(link => link.source = link.source_id);
     graph.links.map(link => link.target = link.target_id);
+
+    // Set coordinates if presented
   	graph.nodes.map(node => node.fx = node.coord_x);
   	graph.nodes.map(node => node.fy = node.coord_y);
+
+    // Init is_changed flag for autosave
+    graph.nodes.map(node => node.is_changed = false);
+    graph.links.map(link => link.is_changed = false);
 
     // Remove broken links (which has no associated nodes)
     function remove_broken_links(graph) {
@@ -27,13 +33,11 @@ function build_plot(graph) {
     }
     graph.links = remove_broken_links(graph);
   
-  	console.log(graph);
-  
   
     // ----------------------------------------
     // Create the SVG container
     const svg = d3
-        .select('#d3_container')
+        .select('.d3-container-svg')
         .attr('width', width)
         .attr('height', height);
   
@@ -60,15 +64,17 @@ function build_plot(graph) {
 
     // ----------------------------------------
     // Render
+    /*
+    // Center distribution
   	const center = zoomGroup
     	.append('g')
-    	.attr('transform', (d) => `translate(${width / 2}, ${height / 2})`);
-    
-    center.append('circle')
+    	.attr('transform', (d) => `translate(${width / 2}, ${height / 2})`)
+        .append('circle')
   		.attr('r', 200)
-    	.attr('fill', '#6ce2ff94')
-        .attr('stroke', '#6ce2ff50')
+    	.attr('fill', '#00000070')
+        .attr('stroke', '#00000030')
         .attr('stroke-width', 200);
+    */
   
     // Render the links
     const link = zoomGroup
@@ -77,8 +83,8 @@ function build_plot(graph) {
         .enter()
         .append('line')
         //.attr('class', 'link')
-        .attr('stroke', '#999')
-        .attr('stroke-opacity', 0.4);
+        .attr('stroke', '#777')
+        .attr('stroke-opacity', 0.5);
 
     // Render the nodes
     const node = zoomGroup
@@ -127,7 +133,6 @@ function build_plot(graph) {
             if (!event.active) simulation.alphaTarget(0);
             d.fx = d.x;
             d.fy = d.y;
-          	console.log(d);
         }
 
         return d3
@@ -204,90 +209,90 @@ function init_d3_plot() {
 }
 
 function init_d3_plot_off() {
-  graph = {
-      nodes: [
-        {
-          active_on: true,
-          weight: 44,
-          id: 1,
-          coord_x: 400.844,
-          coord_y: 400.353,
-          coord_z: 8.418,
-          description: 'entdzhwcmtnz',
-          type: 4,
-          name: 'some_1',
-          time_created: '2023-05-21T14:58:43',
-        },
-        {
-          active_on: true,
-          weight: 26,
-          id: 2,
-          coord_x: 610.844,
-          coord_y: 540.353,
-          coord_z: 540.252,
-          description: 'vqeltlt',
-          type: 3,
-          name: 'some_2',
-          time_created: '2023-05-21T14:58:43',
-        },
-        {
-          active_on: true,
-          weight: 26,
-          id: 3,
-          coord_x: 480.844,
-          coord_y: 430.353,
-          coord_z: 430.252,
-          description: 'vqeltlt',
-          type: 3,
-          name: 'some_3',
-          time_created: '2023-05-21T14:58:43',
-        },
-        {
-          active_on: true,
-          weight: 26,
-          id: 4,
-          fx: 400.844,
-          fy: 400.353,
-          coord_z: 510.252,
-          description: 'vqeltlt',
-          type: 3,
-          name: 'some_4',
-          
-          time_created: '2023-05-21T14:58:43',
-        },
-      ],
-      links: [
-        {
-          source_id: 1,
-          active_on: true,
-          type: 3,
-          description: 'wsjzvtwfno',
-          id: 1,
-          weight: 45,
-          target_id: 2,
-          time_created: '2023-05-21T14:58:47',
-        },
-        {
-          source_id: 1,
-          active_on: true,
-          type: 5,
-          description: 'zufmfn ohthiuz',
-          id: 2,
-          weight: 36,
-          target_id: 3,
-          time_created: '2023-05-21T14:58:47',
-        },
-        {
-          source_id: 1,
-          active_on: true,
-          type: 3,
-          description: 'bnqungpwx loelf',
-          id: 3,
-          weight: 25,
-          target_id: 45,
-          time_created: '2023-05-21T14:58:47',
-        },
-      ],
-    };
+    graph = {
+        nodes: [
+          {
+            is_active: true,
+            weight: 44,
+            id: 1,
+            coord_x: 400.844,
+            coord_y: 400.353,
+            coord_z: 8.418,
+            description: 'entdzhwcmtnz',
+            type: 4,
+            name: 'some_1',
+            time_created: '2023-05-21T14:58:43',
+          },
+          {
+            is_active: true,
+            weight: 26,
+            id: 2,
+            coord_x: 610.844,
+            coord_y: 540.353,
+            coord_z: 540.252,
+            description: 'vqeltlt',
+            type: 3,
+            name: 'some_2',
+            time_created: '2023-05-21T14:58:43',
+          },
+          {
+            is_active: true,
+            weight: 26,
+            id: 3,
+            coord_x: 480.844,
+            coord_y: 430.353,
+            coord_z: 430.252,
+            description: 'vqeltlt',
+            type: 3,
+            name: 'some_3',
+            time_created: '2023-05-21T14:58:43',
+          },
+          {
+            is_active: true,
+            weight: 26,
+            id: 4,
+            fx: 400.844,
+            fy: 400.353,
+            coord_z: 510.252,
+            description: 'vqeltlt',
+            type: 3,
+            name: 'some_4',
+            
+            time_created: '2023-05-21T14:58:43',
+          },
+        ],
+        links: [
+          {
+            source_id: 1,
+            is_active: true,
+            type: 3,
+            description: 'wsjzvtwfno',
+            id: 1,
+            weight: 45,
+            target_id: 2,
+            time_created: '2023-05-21T14:58:47',
+          },
+          {
+            source_id: 1,
+            is_active: true,
+            type: 5,
+            description: 'zufmfn ohthiuz',
+            id: 2,
+            weight: 36,
+            target_id: 3,
+            time_created: '2023-05-21T14:58:47',
+          },
+          {
+            source_id: 1,
+            is_active: true,
+            type: 3,
+            description: 'bnqungpwx loelf',
+            id: 3,
+            weight: 25,
+            target_id: 45,
+            time_created: '2023-05-21T14:58:47',
+          },
+        ],
+      };
   	build_plot(graph);
 }

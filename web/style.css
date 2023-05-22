@@ -40,10 +40,34 @@
 }
 
 /* d3 ---------------------------------------- */
-#d3_container {
-  border: 1px solid #2268ff;
+/*
+.main-container {
+  //display: flex;
+}
+*/
+
+.d3-container {
+  padding: 10px;
 }
 
-.d3_node {
+.d3-container-svg {
+  border: 2px solid #d5d5d5c4;
+  border-radius: 5px;
+  background: #ffffff30;
+}
+
+.d3-node {
   fill: #78e4ffc9;
+}
+
+.forms-container {
+  border: 2px solid #6a6a6a96;
+  border-radius: 5px;
+  background: #0000003d;
+  padding: 10px;
+  margin: 10px;
+}
+
+.form-label {
+  margin-bottom: 0;
 }
