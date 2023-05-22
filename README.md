@@ -27,24 +27,27 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
     - [x] canvas zoom and pane
     - [x] static coordinates
 - [x] front_d3: vue reactivity (via vue data)
-- [ ] front_d3: crud - interface (forms)
+- [x] front_d3: crud - interface (forms)
     - [x] popup forms
         - [x] node
         - [x] link
     - [x] canvas (onclick select)
         - [x] node
         - [x] link
-    - [ ] is_active: show / hide
 - [ ] front_d3: crud - functionality (via form)
-    - [ ] update
+    - [ ] delete (via is_active)
         - [ ] node
         - [ ] link
     - [ ] create
         - [ ] node
         - [ ] link
+    - [ ] update
+        - [ ] node
+        - [ ] link
 - [ ] front_d3: crud - autosave
 - [ ] back: crud
     - [ ] merge from autosave
+- [ ] front: refactor
 - [ ] back: testing
 - [ ] back: logging
 - [ ] front: wishes
@@ -52,7 +55,7 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
     - [ ] nodes size via value
     - [ ] colors via types (nodes + links)
     - [ ] beautify
-    - [ ] select group of nodes
+    - [ ] select group of nodes / links
     - [ ] nodes collapse by hierarchy
     - [ ] highlight linked nodes of selected node
     - [ ] editable popup form with node/link details
