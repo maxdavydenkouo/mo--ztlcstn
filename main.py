@@ -79,7 +79,7 @@ class Node(Base):
     __tablename__ = "nodes"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    active_on = Column(Boolean, default=True, nullable=False) 
+    is_active = Column(Boolean, default=True, nullable=False) 
     type = Column(Integer, default=NodeType.LEAF.value['id'], nullable=False)
     weight = Column(Integer, default=30, nullable=False) # from 0 to 100
     name = Column(String, nullable=False)
@@ -98,7 +98,7 @@ class Link(Base):
     __tablename__ = "links"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    active_on = Column(Boolean, default=True, nullable=False)
+    is_active = Column(Boolean, default=True, nullable=False)
     type = Column(Integer, default=LinkType.HIERARCHY.value['id'], nullable=False)
     weight = Column(Integer, default=30, nullable=False) # from 0 to 100
     source_id = Column(Integer, ForeignKey("nodes.id"), index=True, nullable=False)
@@ -140,8 +140,8 @@ def generate_dummy_nodes(count):
         # set null coordinates for the half of nodes to test forse simulation
         cx = cy = None
         if random.randint(1,2) == 1:
-            cx = round(random.uniform(100, 800), 3) # hardcoce coordinates related to canvas size
-            cy = round(random.uniform(100, 800), 3) # hardcoce coordinates related to canvas size
+            cx = round(random.uniform(100, 800), 3) # hardcode coordinates related to canvas size
+            cy = round(random.uniform(100, 800), 3) # hardcode coordinates related to canvas size
 
         nodes.append({
             "id": i+1,
