@@ -31,6 +31,8 @@ createApp({
                 time_created: null,
                 is_show: null,
             },
+            nodes_index_map: {},
+            links_index_map: {},
             is_payload_exists: false,
             error_message: "",
             error_popup_on: false,
@@ -48,6 +50,14 @@ createApp({
         async init_graph() {
             this.graph.nodes = await this.get_items('nodes');
             this.graph.links = await this.get_items('links');
+
+            // ----------------------------------------
+            // Usable data
+            // Map node/link id to its index in array for fast search by id
+            // Use: graph.nodes[nodes_index_map[id]] = <node object>
+            graph.nodes.forEach((node, i) => { this.nodes_index_map[node.id] = i; });
+            graph.links.forEach((node, i) => { this.links_index_map[node.id] = i; });
+
             this.build_plot(this.graph);
         },
         async get_items(item) {
@@ -69,15 +79,6 @@ createApp({
 
             const NODE_RADIUS = 5;
             const TEXT_SIZE = 10;
-        
-            // ----------------------------------------
-            // Usable data
-            // Map node/link id to its index in array for fast search by id
-            // Use: graph.nodes[nodes_index_map[id]] = <node object>
-            var nodes_index_map = {};
-            graph.nodes.forEach((node, i) => { nodes_index_map[node.id] = i; });
-            var links_index_map = {};
-            graph.links.forEach((node, i) => { links_index_map[node.id] = i; });
 
             // ----------------------------------------
             // Prepare data
@@ -94,7 +95,8 @@ createApp({
             graph.links.map(link => link.is_changed = false);
         
             // Remove broken links (which has no associated nodes)
-            function remove_broken_links(graph) {
+            // HACK: add nodes_index_map as param because can't get it inside function
+            function remove_broken_links(graph, nodes_index_map) {
                 var valid_links = graph.links.filter(link => 
                     link.source_id in nodes_index_map && 
                     link.target_id in nodes_index_map && 
@@ -103,7 +105,7 @@ createApp({
                 );
                 return valid_links;
             }
-            graph.links = remove_broken_links(graph);
+            graph.links = remove_broken_links(graph, this.nodes_index_map);
           
             // ----------------------------------------
             // Create the SVG container
@@ -156,9 +158,18 @@ createApp({
                 .attr('stroke', '#777')
                 .attr('stroke-opacity', 0.5)
                 .on("click", (event, d) => {
-                    this.link_edit = d;
-                    this.link_edit.is_show = true;
-                    console.log(d);
+                    this.link_edit = {
+                        id: d.id,
+                        is_active: d.is_active,
+                        type: d.type,
+                        weight: d.weight,
+                        source_id: d.source_id,
+                        target_id: d.target_id,
+                        description: d.description,
+                        time_created: d.time_created,
+                        is_show: true,
+                    };
+                    console.log(this.link_edit);
                 });
 
             // Render the nodes
@@ -172,19 +183,30 @@ createApp({
                 //.attr('transform', (d) => `translate(${d.coord_x}, ${d.coord_y})`)
                 .call(drag(simulation)); // Enable node drag using the 'drag' function
         
-            node
+            const node_circle = node
                 .append('circle')
                 .attr('r', NODE_RADIUS)
                 .attr('fill', '#ccc')
                 .attr('stroke', '#fff')
                 .attr('stroke-width', 1.5)
                 .on("click", (event, d) => {
-                    this.node_edit = d;
-                    this.node_edit.is_show = true;  
-                    console.log(d);
+                    this.node_edit = {
+                        id: d.id,
+                        is_active: d.is_active,
+                        type: d.type,
+                        weight: d.weight,
+                        name: d.name,
+                        coord_x: d.fx,
+                        coord_y: d.fy,
+                        coord_z: d.coord_z,
+                        description: d.description,
+                        time_created: d.time_created,
+                        is_show: true,
+                    }
+                    console.log(this.node_edit);
                 });
         
-            node
+            const node_text = node
                 .append('text')
                 .attr('dx', 7)
                 //.attr('dy', '.35em')
@@ -229,8 +251,17 @@ createApp({
                     .attr('y1', (d) => d.source.y)
                     .attr('x2', (d) => d.target.x)
                     .attr('y2', (d) => d.target.y);
+
+                    // way to directly set source / target node coordinates for link
+                    // .attr('x1', (d) => graph.nodes[this.nodes_index_map[d.source_id]].x)
+                    // .attr('y1', (d) => graph.nodes[this.nodes_index_map[d.source_id]].y)
+                    // .attr('x2', (d) => graph.nodes[this.nodes_index_map[d.target_id]].x)
+                    // .attr('y2', (d) => graph.nodes[this.nodes_index_map[d.target_id]].y);
         
                 node.attr('transform', (d) => `translate(${d.x}, ${d.y})`);
+
+                // HACK: remove in future (update name from data after it changes)
+                node_text.text((d) => d.name);
             });
           
               // ----------------------------------------
@@ -239,19 +270,32 @@ createApp({
                 zoomGroup.attr("transform", e.transform);
             }
         },
-        // async save_as_relevant() {
-        //     if (this.is_payload_exists == true && this.response.name != "") {
-        //     let res = await axios.post('predict/saved?q=' + encodeURIComponent(this.response.name));
-        //     if (res.data.meta.success == false) {
-        //         this.arise_error(res.data.meta.description);  
-        //     } else {
-        //         this.response.is_saved = true;
-        //         this.response.saved_id = res.data.payload.id;
-        //     }
-        //     } else {
-        //     this.arise_error("can't save item by empty name value");
-        //     }
-        // },
+        update_node(node) {
+            //console.log(node.is_active);
+            let n = this.graph.nodes[this.nodes_index_map[node.id]];
+            n.is_active = node.is_active;
+            n.type = node.type;
+            n.weight = node.weight;
+            n.name = node.name;
+            n.coord_x = parseInt(node.coord_x);
+            n.fx = parseInt(node.coord_x);
+            n.coord_y = parseInt(node.coord_y);
+            n.fy = parseInt(node.coord_y);
+            n.coord_z = parseInt(node.coord_z);
+            n.description = node.description;
+        },
+        update_link(link) {
+            //console.log(link.id);
+            let l = this.graph.links[this.links_index_map[link.id]];
+            l.is_active = link.is_active;
+            l.type = link.type;
+            l.weight = link.weight;
+            l.source_id = link.source_id;
+            l.source = this.graph.nodes[this.nodes_index_map[link.source_id]];
+            l.target_id = link.target_id;
+            l.target = this.graph.nodes[this.nodes_index_map[link.target_id]];
+            l.description = link.description;
+        },
         arise_error_popup(message) {
             this.error_popup_on = true;
             this.error_message = message;

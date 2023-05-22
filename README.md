@@ -38,9 +38,9 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
     - [x] delete/hide functionality (via is_active)
         - [x] node
         - [x] link
-    - [ ] update
-        - [ ] node
-        - [ ] link
+    - [x] update (via buttom only - no reactivity)
+        - [x] node
+        - [x] link
     - [ ] create
         - [ ] node
         - [ ] link
@@ -61,6 +61,7 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
     - [ ] editable popup form with node/link details
         - ref: [https://stackoverflow.com/questions/5972705]
     - [ ] minimap (additional canvas or svg for navigation) - here's what vue used for
+    - [ ] back: history functionality
 
 
 # ideas

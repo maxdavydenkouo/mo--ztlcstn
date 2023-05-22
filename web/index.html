@@ -42,90 +42,90 @@
       <div class="forms-container col" style="margin-top:10px" v-if="node_edit.is_show">
         <div class="node-form">
           <b style="font-size: 30px">NODE: {{node_edit.id}}</b> <span>[{{node_edit.time_created}}]</span>
-          <form>
+          <form action="javascript:void(0);">
             <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="active" :checked="node_edit.is_active">
+              <input type="checkbox" class="form-check-input" id="active" v-model="node_edit.is_active">
               <label class="form-check-label" for="exampleCheck1">Active</label>
             </div>
             <div class="mb-3">
               <div class="row g-3 align-items-center">
                 <div class="col-auto"><label for="name">name</label></div>
-                <div class="col-auto"><input :value="node_edit.name" type="text" class="form-control" id="name"></div>
+                <div class="col-auto"><input v-model="node_edit.name" type="text" class="form-control" id="name"></div>
               </div>
             </div>
             <div class="mb-3">
               <div class="row g-3 align-items-center">
                 <div class="col-auto"><label for="type">type</label></div>
-                <div class="col-auto"><input :value="node_edit.type"type="text" class="form-control" id="type"></div>
+                <div class="col-auto"><input v-model="node_edit.type"type="text" class="form-control" id="type"></div>
               </div>
             </div>
             <div class="mb-3">
               <div class="row g-3 align-items-center">
                 <div class="col-auto"><label for="weight">weight</label></div>
-                <div class="col-auto"><input :value="node_edit.weight" type="text" class="form-control" id="weight"></div>
+                <div class="col-auto"><input v-model="node_edit.weight" type="text" class="form-control" id="weight"></div>
               </div>
             </div>
             <div class="mb-3">
               <div class="row g-3 align-items-center">
                 <div class="col-auto"><label for="coord_x">coord_x</label></div>
-                <div class="col-auto"><input :value="node_edit.coord_x" type="text" class="form-control" id="coord_x"></div>
+                <div class="col-auto"><input v-model="node_edit.coord_x" type="text" class="form-control" id="coord_x"></div>
               </div>
             </div>
             <div class="mb-3">
               <div class="row g-3 align-items-center">
                 <div class="col-auto"><label for="coord_y">coord_y</label></div>
-                <div class="col-auto"><input :value="node_edit.coord_y" type="text" class="form-control" id="coord_y"></div>
+                <div class="col-auto"><input v-model="node_edit.coord_y" type="text" class="form-control" id="coord_y"></div>
               </div>
             </div>
             <div class="mb-3">
               <div class="row g-3 align-items-center">
                 <div class="col-auto"><label for="coord_z">coord_z</label></div>
-                <div class="col-auto"><input :value="node_edit.coord_z" type="text" class="form-control" id="coord_z"></div>
+                <div class="col-auto"><input v-model="node_edit.coord_z" type="text" class="form-control" id="coord_z"></div>
               </div>
             </div>
             <div class="mb-3">
-              <textarea :value="node_edit.description" class="form-control" id="description" rows="10"></textarea>
+              <textarea v-model="node_edit.description" class="form-control" id="description" rows="10"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button @click="update_node(node_edit)" class="btn btn-primary">Update</button>
           </form>
         </div>
       </div>
       <div class="forms-container col" style="margin-top:10px" v-if="link_edit.is_show">
         <div class="link-form">
           <b style="font-size: 30px">LINK: {{link_edit.id}}</b> <span>[{{link_edit.time_created}}]</span>
-          <form>
+          <form action="javascript:void(0);">
             <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="active" :checked="link_edit.is_active">
+              <input type="checkbox" class="form-check-input" id="active" v-model="link_edit.is_active">
               <label class="form-check-label" for="exampleCheck1">Active</label>
             </div>
             <div class="mb-3">
               <div class="row g-3 align-items-center">
                 <div class="col-auto"><label for="type">type</label></div>
-                <div class="col-auto"><input :value="link_edit.type"type="text" class="form-control" id="type"></div>
+                <div class="col-auto"><input v-model="link_edit.type"type="text" class="form-control" id="type"></div>
               </div>
             </div>
             <div class="mb-3">
               <div class="row g-3 align-items-center">
                 <div class="col-auto"><label for="weight">weight</label></div>
-                <div class="col-auto"><input :value="link_edit.weight" type="text" class="form-control" id="weight"></div>
+                <div class="col-auto"><input v-model="link_edit.weight" type="text" class="form-control" id="weight"></div>
               </div>
             </div>
             <div class="mb-3">
               <div class="row g-3 align-items-center">
                 <div class="col-auto"><label for="source_id">source_id</label></div>
-                <div class="col-auto"><input :value="link_edit.source_id" type="text" class="form-control" id="source_id"></div>
+                <div class="col-auto"><input v-model="link_edit.source_id" type="text" class="form-control" id="source_id"></div>
               </div>
             </div>
             <div class="mb-3">
               <div class="row g-3 align-items-center">
                 <div class="col-auto"><label for="target_id">target_id</label></div>
-                <div class="col-auto"><input :value="link_edit.target_id" type="text" class="form-control" id="target_id"></div>
+                <div class="col-auto"><input v-model="link_edit.target_id" type="text" class="form-control" id="target_id"></div>
               </div>
             </div>
             <div class="mb-3">
-              <textarea :value="link_edit.description" class="form-control" id="description" rows="10"></textarea>
+              <textarea v-model="link_edit.description" class="form-control" id="description" rows="10"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button @click="update_link(link_edit)" class="btn btn-primary">Update</button>
           </form>
         </div>
         <!--
