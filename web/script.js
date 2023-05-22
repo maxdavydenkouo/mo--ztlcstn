@@ -49,12 +49,6 @@ createApp({
             this.graph.nodes = await this.get_items('nodes');
             this.graph.links = await this.get_items('links');
             this.build_plot(this.graph);
-
-            // TEMP: fill dummy data
-            //this.node_edit = this.graph.nodes[12];
-            //this.node_edit.is_show = true;
-            //this.link_edit = this.graph.links[23];
-            //this.link_edit.is_show = true;
         },
         async get_items(item) {
             // get items by axios request
@@ -62,7 +56,6 @@ createApp({
             if (res.data.success == true) {
                 return res.data.payload;
             } else {
-                // errors
                 this.error_message = res.data.description;
                 this.error_popup_on = true;
             }
@@ -71,8 +64,8 @@ createApp({
             // ----------------------------------------
             // Config
             // TEMP: hardcode canvas size
-            const width = 900;      // window.innerWidth
-            const height = 900;     // window.innerHeight
+            const WIDTH = 900;      // window.innerWidth
+            const HEIGHT = 900;     // window.innerHeight
 
             const NODE_RADIUS = 5;
             const TEXT_SIZE = 10;
@@ -93,11 +86,14 @@ createApp({
         
             // Remove broken links (which has no associated nodes)
             function remove_broken_links(graph) {
-                var nodes_ids = graph.nodes.map(node => node.id);
+                var nodes_dict = {};
+                graph.nodes.forEach(node => { nodes_dict[node.id] = node; });
                 var valid_links = graph.links.filter(link => 
-                    nodes_ids.includes(link.source_id) && 
-                    nodes_ids.includes(link.target_id)
-                )
+                    link.source_id in nodes_dict && 
+                    link.target_id in nodes_dict && 
+                    nodes_dict[link.source_id].is_active &&
+                    nodes_dict[link.target_id].is_active
+                );
                 return valid_links;
             }
             graph.links = remove_broken_links(graph);
@@ -106,8 +102,8 @@ createApp({
             // Create the SVG container
             const svg = d3
                 .select('.d3-container-svg')
-                .attr('width', width)
-                .attr('height', height);
+                .attr('width', WIDTH)
+                .attr('height', HEIGHT);
           
               // ----------------------------------------
               // Zoom
@@ -128,14 +124,14 @@ createApp({
                 .forceSimulation(graph.nodes)
                 .force('link', d3.forceLink(graph.links).id((d) => d.id))
                 .force('charge', d3.forceManyBody())
-                .force('center', d3.forceCenter(width / 2, height / 2));
+                .force('center', d3.forceCenter(WIDTH / 2, HEIGHT / 2));
         
             // ----------------------------------------
             // Render
             // Center distribution
               const center = zoomGroup
                 .append('g')
-                .attr('transform', (d) => `translate(${width / 2}, ${height / 2})`)
+                .attr('transform', (d) => `translate(${WIDTH / 2}, ${HEIGHT / 2})`)
                 .append('circle')
                 .attr('r', 200)
                 .attr('fill', '#00000070')
@@ -147,6 +143,7 @@ createApp({
                 .selectAll('.link')
                 .data(graph.links)
                 .enter()
+                .filter((d) => d.is_active)
                 .append('line')
                 //.attr('class', 'link')
                 .attr('stroke', '#777')
@@ -161,10 +158,9 @@ createApp({
                 .selectAll('.node')
                 .data(graph.nodes)
                 .enter()
+                .filter((d) => d.is_active)
                 .append('g')
                 .attr('class', 'node')
-                //.attr('fx', (d) => d.fx = d.coord_x)
-                //.attr('fy', (d) => d.fy = d.coord_y)
                 //.attr('transform', (d) => `translate(${d.coord_x}, ${d.coord_y})`)
                 .call(drag(simulation)); // Enable node drag using the 'drag' function
         
@@ -183,7 +179,7 @@ createApp({
                 .append('text')
                 .attr('dx', 7)
                 //.attr('dy', '.35em')
-                  .attr('alignment-baseline', 'middle')
+                .attr('alignment-baseline', 'middle')
                 .style('pointer-events', 'none')
                 .text((d) => d.name);
         

@@ -6,7 +6,7 @@
 - graph first - text second - visualizatoin and navigation through the map
 - nodes-linkes architecture - there are only nodes and links, between them
 - laconic data - store only valuable and informative information
-- middle field - [[inner world]]..............[xxxxx]..............[[outer_world]]
+- middle field - [inner world]..............[xxxxx]..............[outer_world]
 
 
 # alternatives
@@ -35,13 +35,13 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
         - [x] node
         - [x] link
 - [ ] front_d3: crud - functionality (via form)
-    - [ ] delete (via is_active)
+    - [x] delete/hide functionality (via is_active)
+        - [x] node
+        - [x] link
+    - [ ] update
         - [ ] node
         - [ ] link
     - [ ] create
-        - [ ] node
-        - [ ] link
-    - [ ] update
         - [ ] node
         - [ ] link
 - [ ] front_d3: crud - autosave
