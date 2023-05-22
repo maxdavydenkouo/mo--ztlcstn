@@ -27,27 +27,24 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
     - [x] canvas zoom and pane
     - [x] static coordinates
 - [x] front_d3: vue reactivity (via vue data)
-- [ ] front_d3: crud (forms)
-    - [ ] canvas (select)
+- [ ] front_d3: crud - interface (forms)
+    - [x] popup forms
+        - [x] node
+        - [x] link
+    - [ ] canvas (onclick select)
         - [ ] node
         - [ ] link
-    - [ ] popup forms (bundle)
+    - [ ] is_active: show / hide
+- [ ] front_d3: crud - functionality (via form)
+    - [ ] update
         - [ ] node
         - [ ] link
-- [ ] front_d3: crud (server requests)
-    - [ ] update
-        - [ ] nodes
-        - [ ] links
-    - [ ] delete
-        - [ ] nodes
-        - [ ] links
-    - [ ] create (via form)
-        - [ ] nodes
-        - [ ] links
-- [ ] back: crud
-    - [ ] update
-    - [ ] delete
     - [ ] create
+        - [ ] node
+        - [ ] link
+- [ ] front_d3: crud - autosave
+- [ ] back: crud
+    - [ ] merge from autosave
 - [ ] back: testing
 - [ ] back: logging
 - [ ] front: wishes
