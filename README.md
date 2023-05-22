@@ -31,9 +31,9 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
     - [x] popup forms
         - [x] node
         - [x] link
-    - [ ] canvas (onclick select)
-        - [ ] node
-        - [ ] link
+    - [x] canvas (onclick select)
+        - [x] node
+        - [x] link
     - [ ] is_active: show / hide
 - [ ] front_d3: crud - functionality (via form)
     - [ ] update
