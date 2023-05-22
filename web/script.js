@@ -55,8 +55,8 @@ createApp({
             // Usable data
             // Map node/link id to its index in array for fast search by id
             // Use: graph.nodes[nodes_index_map[id]] = <node object>
-            graph.nodes.forEach((node, i) => { this.nodes_index_map[node.id] = i; });
-            graph.links.forEach((node, i) => { this.links_index_map[node.id] = i; });
+            this.graph.nodes.forEach((node, i) => { this.nodes_index_map[node.id] = i; });
+            this.graph.links.forEach((node, i) => { this.links_index_map[node.id] = i; });
 
             this.build_plot(this.graph);
         },
