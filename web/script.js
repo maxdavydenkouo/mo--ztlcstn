@@ -71,6 +71,15 @@ createApp({
             const TEXT_SIZE = 10;
         
             // ----------------------------------------
+            // Usable data
+            // Map node/link id to its index in array for fast search by id
+            // Use: graph.nodes[nodes_index_map[id]] = <node object>
+            var nodes_index_map = {};
+            graph.nodes.forEach((node, i) => { nodes_index_map[node.id] = i; });
+            var links_index_map = {};
+            graph.links.forEach((node, i) => { links_index_map[node.id] = i; });
+
+            // ----------------------------------------
             // Prepare data
             // Fill sources and targets by id to implement d3 naming convention
             graph.links.map(link => link.source = link.source_id);
@@ -86,13 +95,11 @@ createApp({
         
             // Remove broken links (which has no associated nodes)
             function remove_broken_links(graph) {
-                var nodes_dict = {};
-                graph.nodes.forEach(node => { nodes_dict[node.id] = node; });
                 var valid_links = graph.links.filter(link => 
-                    link.source_id in nodes_dict && 
-                    link.target_id in nodes_dict && 
-                    nodes_dict[link.source_id].is_active &&
-                    nodes_dict[link.target_id].is_active
+                    link.source_id in nodes_index_map && 
+                    link.target_id in nodes_index_map && 
+                    graph.nodes[nodes_index_map[link.source_id]].is_active &&
+                    graph.nodes[nodes_index_map[link.target_id]].is_active
                 );
                 return valid_links;
             }
@@ -151,6 +158,7 @@ createApp({
                 .on("click", (event, d) => {
                     this.link_edit = d;
                     this.link_edit.is_show = true;
+                    console.log(d);
                 });
 
             // Render the nodes
@@ -173,6 +181,7 @@ createApp({
                 .on("click", (event, d) => {
                     this.node_edit = d;
                     this.node_edit.is_show = true;  
+                    console.log(d);
                 });
         
             node
