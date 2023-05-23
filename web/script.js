@@ -36,6 +36,8 @@ createApp({
             is_payload_exists: false,
             error_message: "",
             error_popup_on: false,
+            info_message: "",
+            info_popup_on: false,
         }
     },
     created() {
@@ -44,13 +46,25 @@ createApp({
     },
     mounted() {
         // DOM has been mounted
-        this.init_graph();
+        this.init();
     },
     methods: {
-        async init_graph() {
+        async init() {
             this.graph.nodes = await this.get_items('nodes');
             this.graph.links = await this.get_items('links');
 
+            this.init_graph();
+        },
+        async refresh() {
+            // HACK: refactor this shitty realizatoin
+            const elements = document.getElementsByClassName("d3-container-svg");
+            console.log(elements[0]);
+            if (elements.length > 0) {
+                elements[0].removeChild(elements[0].lastElementChild);
+            }
+            this.init_graph();
+        },
+        async init_graph() {
             // ----------------------------------------
             // Usable data
             // Map node/link id to its index in array for fast search by id
@@ -138,14 +152,14 @@ createApp({
             // ----------------------------------------
             // Render
             // Center distribution
-              const center = zoomGroup
-                .append('g')
-                .attr('transform', (d) => `translate(${WIDTH / 2}, ${HEIGHT / 2})`)
-                .append('circle')
-                .attr('r', 200)
-                .attr('fill', '#00000070')
-                .attr('stroke', '#00000030')
-                .attr('stroke-width', 200);
+            // const center = zoomGroup
+            //     .append('g')
+            //     .attr('transform', (d) => `translate(${WIDTH / 2}, ${HEIGHT / 2})`)
+            //     .append('circle')
+            //     .attr('r', 200)
+            //     .attr('fill', '#00000070')
+            //     .attr('stroke', '#00000030')
+            //     .attr('stroke-width', 200);
           
             // Render the links
             const link = zoomGroup
@@ -296,6 +310,11 @@ createApp({
             l.target = this.graph.nodes[this.nodes_index_map[link.target_id]];
             l.description = link.description;
         },
+        async save() {
+            // TODO: add save functionality
+
+            this.arise_info_popup('Grapgh saved');
+        },
         arise_error_popup(message) {
             this.error_popup_on = true;
             this.error_message = message;
@@ -303,6 +322,14 @@ createApp({
         close_error_popup() {
             this.error_popup_on = !this.error_popup_on;
             this.error_message = "";
+        },
+        arise_info_popup(message) {
+            this.info_popup_on = true;
+            this.info_message = message;
+        },
+        close_info_popup() {
+            this.info_popup_on = !this.info_popup_on;
+            this.info_message = "";
         }
     }
 }).mount('#app')

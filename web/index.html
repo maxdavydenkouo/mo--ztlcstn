@@ -28,7 +28,8 @@
     <div>
       <div class="btn-group me-2" role="group" aria-label="Second group" style="padding-bottom: 10px">
         <button type="button" class="btn btn-secondary"><a class="link-light" style="text-decoration: none" href=".">Home</a></button>
-        <button type="button" class="btn btn-secondary"><a class="link-light" style="text-decoration: none" href="#">Some</a></button>
+        <button @click="refresh()" type="button" class="btn btn-secondary"><a class="link-light" style="text-decoration: none">Refresh</a></button>
+        <button @click="save()" type="button" class="btn btn-secondary"><a class="link-light" style="text-decoration: none">Save</a></button>
       </div>
     </div>
     <!-- main container -->
@@ -134,6 +135,9 @@
         -->
       </div>
     </div>
+
+    <!-- info popup-->
+    <div v-if="info_popup_on" @click="close_info_popup" type="button" class="btn-group info-message-popup">{{info_message}}</div>
 
     <!-- error popup-->
     <div v-if="error_popup_on" @click="close_error_popup" type="button" class="btn-group error-message-popup">{{error_message}}</div>
