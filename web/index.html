@@ -87,7 +87,10 @@
             <div class="mb-3">
               <textarea v-model="node_edit.description" class="form-control" id="description" rows="10"></textarea>
             </div>
-            <button @click="update_node(node_edit)" class="btn btn-primary">Update</button>
+            <div class="btn-group me-2" role="group" aria-label="Second group" style="padding-bottom: 10px">
+              <button @click="update_node(node_edit)" class="btn btn-secondary">Update</button>
+              <button @click="add_node(node_edit)" class="btn btn-secondary">Create</button>
+            </div>
           </form>
         </div>
       </div>
@@ -126,7 +129,10 @@
             <div class="mb-3">
               <textarea v-model="link_edit.description" class="form-control" id="description" rows="10"></textarea>
             </div>
-            <button @click="update_link(link_edit)" class="btn btn-primary">Update</button>
+            <div class="btn-group me-2" role="group" aria-label="Second group" style="padding-bottom: 10px">
+              <button @click="update_link(link_edit)" class="btn btn-secondary">Update</button>
+              <button @click="add_link(link_edit)" class="btn btn-secondary">Create</button>
+            </div>
           </form>
         </div>
         <!--

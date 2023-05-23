@@ -34,16 +34,16 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
     - [x] canvas (onclick select)
         - [x] node
         - [x] link
-- [ ] front_d3: crud - functionality (via form)
+- [x] front_d3: crud - functionality (via form)
     - [x] delete/hide functionality (via is_active)
         - [x] node
         - [x] link
     - [x] update (via buttom only - no reactivity)
         - [x] node
         - [x] link
-    - [ ] create
-        - [ ] node
-        - [ ] link
+    - [x] create
+        - [x] node
+        - [x] link
 - [ ] front_d3: crud - autosave
 - [ ] back: crud
     - [ ] merge from autosave

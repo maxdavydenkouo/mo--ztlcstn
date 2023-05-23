@@ -58,7 +58,6 @@ createApp({
         async refresh() {
             // HACK: refactor this shitty realizatoin
             const elements = document.getElementsByClassName("d3-container-svg");
-            console.log(elements[0]);
             if (elements.length > 0) {
                 elements[0].removeChild(elements[0].lastElementChild);
             }
@@ -183,7 +182,6 @@ createApp({
                         time_created: d.time_created,
                         is_show: true,
                     };
-                    console.log(this.link_edit);
                 });
 
             // Render the nodes
@@ -217,7 +215,6 @@ createApp({
                         time_created: d.time_created,
                         is_show: true,
                     }
-                    console.log(this.node_edit);
                 });
         
             const node_text = node
@@ -226,7 +223,7 @@ createApp({
                 //.attr('dy', '.35em')
                 .attr('alignment-baseline', 'middle')
                 .style('pointer-events', 'none')
-                .text((d) => d.name);
+                .text((d) => `${d.name} [${d.id}]`);
         
             // ----------------------------------------
             // Define the drag behavior
@@ -275,7 +272,7 @@ createApp({
                 node.attr('transform', (d) => `translate(${d.x}, ${d.y})`);
 
                 // HACK: remove in future (update name from data after it changes)
-                node_text.text((d) => d.name);
+                node_text.text((d) => `${d.name} [${d.id}]`);
             });
           
               // ----------------------------------------
@@ -310,8 +307,39 @@ createApp({
             l.target = this.graph.nodes[this.nodes_index_map[link.target_id]];
             l.description = link.description;
         },
+        add_node(node) {
+            //var replaced_node = this.graph.nodes[this.nodes_index_map[node.id]];
+            var replaced_node = {
+                id: this.uuidv4(), // HACK: generate guid for store faked id
+                name: node.name,
+                is_active: node.is_active,
+                type: node.type,
+                weight: node.weight,
+                coord_x: parseInt(node.coord_x),
+                coord_y: parseInt(node.coord_y),
+                coord_z: parseInt(node.coord_z),
+                description: node.description,
+            };
+
+            this.graph.nodes.push(replaced_node);
+            this.arise_info_popup('add node');
+        },
+        add_link(link) {
+            var replaced_link = {
+                id: this.uuidv4(), // HACK: generate guid for store faked id
+                is_active: link.is_active,
+                type: link.type,
+                weight: link.weight,
+                source_id: parseInt(link.source_id),
+                target_id: parseInt(link.target_id),
+                description: link.description,
+            };
+
+            this.graph.links.push(replaced_link);
+            this.arise_info_popup('add link');
+        },
         async save() {
-            // TODO: add save functionality
+            // TODO: finish
 
             this.arise_info_popup('Grapgh saved');
         },
@@ -330,6 +358,11 @@ createApp({
         close_info_popup() {
             this.info_popup_on = !this.info_popup_on;
             this.info_message = "";
-        }
+        },
+        uuidv4() {
+            return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+            );
+        }          
     }
 }).mount('#app')
