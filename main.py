@@ -1,12 +1,11 @@
 from typing import Union
-from fastapi import FastAPI
 from fastapi.responses import FileResponse, HTMLResponse
 import uvicorn
 import os
 import random
 import string
 from enum import Enum
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Body
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, Column, Integer, Float, String, ForeignKey, Boolean, Index, DateTime, JSON
 from sqlalchemy.ext.declarative import declarative_base
@@ -151,8 +150,8 @@ def generate_dummy_nodes(count):
             "coord_x": cx,
             "coord_y": cy,
             "coord_z": round(random.uniform(0, 10), 3),
-            #"color": "#".join(random.choice("1234567890ABCDEF") for _ in range(6)),
             "description": random_string(5, 20).strip()
+            #"color": "#".join(random.choice("1234567890ABCDEF") for _ in range(6)),
         })
             
     return nodes 
@@ -222,11 +221,58 @@ def read_nodes(q: Union[str, None] = None, db: Session = Depends(get_db)):
         "description": ""
     }
 
+@app.post("/api/nodes")
+def upsert_node(body: dict = Body(...), q: Union[str, None] = None, db: Session = Depends(get_db)):
+    # HACK: refactor this dirty solution
+    # create node from node dict
+    #db.refresh(node) # get created node object from db
+    #try:
+    for n in body['nodes']:
+        n['id'] = n['id'] if isinstance(n['id'], int) else None
+        el = {
+            "id": n['id'],
+            "name": n['name'],
+            "type": n['type'],
+            "weight": n['weight'],
+            "coord_x": n['coord_x'],
+            "coord_y": n['coord_y'],
+            "coord_z": n['coord_z'],
+            "description": n['description'],
+        }
+        node = Node(**el)
+        db.merge(node)
+    db.commit()
+    return {
+        "success": True,
+        "payload": None,
+        "description": None
+    }
+    # except Exception as e:
+        # return {
+            # "success": False,
+            # "payload": None,
+            # "description": e
+        # }
+
+# @app.patch("/api/nodes")
+# def update_node(body: dict = Body(...), q: Union[str, None] = None, db: Session = Depends(get_db)):
+#     # HACK: refactor this dirty solution
+#     # update node from node dict
+#     node = Node(**body)
+#     db.merge(node)
+#     db.commit()
+
+#     return {
+#         "success": True,
+#         "payload": node,
+#         "description": ""
+#    }
+    
 @app.get("/api/nodes/{item_id}")
 def read_node(item_id: int, q: Union[str, None] = None, db: Session = Depends(get_db)):
     return {
         "success": True,
-        "payload": db.query(Link).filter(Node.id == item_id).first(),
+        "payload": db.query(Node).filter(Node.id == item_id).first(),
         "description": ""
     }
 
@@ -237,6 +283,37 @@ def read_links(q: Union[str, None] = None, db: Session = Depends(get_db)):
         "payload": db.query(Link).all(),
         "description": ""
     }
+
+@app.post("/api/links")
+def upsert_link(body: dict = Body(...), q: Union[str, None] = None, db: Session = Depends(get_db)):
+    # HACK: refactor this dirty solution
+    # create link from link dict
+    #db.refresh(link) # get created link object from db
+    try:
+        for l in body['links']:
+            l['id'] = l['id'] if isinstance(l['id'], int) else None
+            el = {
+                "id": l["id"],
+                "type": l["type"],
+                "weight": l["weight"],
+                "source_id": l["source_id"],
+                "target_id": l["target_id"],
+                "description": l["description"],
+            }
+            link = Link(**el)
+            db.merge(link)
+        db.commit()
+        return {
+            "success": True,
+            "payload": None,
+            "description": None
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "payload": None,
+            "description": e
+        }
 
 @app.get("/api/links/{item_id}")
 def read_link(item_id: int, q: Union[str, None] = None, db: Session = Depends(get_db)):

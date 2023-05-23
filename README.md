@@ -1,5 +1,5 @@
 # Description
-- zettelkasten concept implementation
+- zettelkasten concept implementation (POC)
 
 
 # principles
@@ -15,7 +15,7 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
 - vscode foam extention, but network manipulation functionality quite better, than in raw obsidian graph
 
 
-# plan (MVP)
+# plan (POC)
 - [x] init
 - [x] back: basic structure
 - [x] front: basic structure
@@ -44,9 +44,8 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
     - [x] create
         - [x] node
         - [x] link
-- [ ] front_d3: crud - autosave
-- [ ] back: crud
-    - [ ] merge from autosave
+- [x] front_d3: crud - global save
+- [x] back: crud - multiple merge
 - [ ] front: refactor
 - [ ] back: testing
 - [ ] back: logging

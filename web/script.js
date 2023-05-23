@@ -56,12 +56,15 @@ createApp({
             this.init_graph();
         },
         async refresh() {
+            await this.clear_plot();  
+            this.init_graph();
+        },
+        async clear_plot() {
             // HACK: refactor this shitty realizatoin
             const elements = document.getElementsByClassName("d3-container-svg");
             if (elements.length > 0) {
                 elements[0].removeChild(elements[0].lastElementChild);
             }
-            this.init_graph();
         },
         async init_graph() {
             // ----------------------------------------
@@ -82,6 +85,30 @@ createApp({
                 this.error_message = res.data.description;
                 this.error_popup_on = true;
             }
+        },
+        async upsert_nodes(nodes) {
+            // get items by axios request
+            let req = {};
+            req.nodes = nodes; // Fastapy requirements to take object, not list
+            let res = await axios.post('api/nodes', req);
+            console.log(res.data);
+            if (res.data.success != true) {
+                this.error_message = res.data.description;
+                this.error_popup_on = true;
+            }
+            return res.data.success;
+        },
+        async upsert_links(links) {
+            // get items by axios request
+            let req = {};
+            req.links = links; // Fastapy requirements to take object, not list
+            let res = await axios.post('api/links', req);
+            console.log(res.data);
+            if (res.data.success != true) {
+                this.error_message = res.data.description;
+                this.error_popup_on = true;
+            }
+            return res.data.success;
         },
         async build_plot(graph) {
             // ----------------------------------------
@@ -170,19 +197,7 @@ createApp({
                 //.attr('class', 'link')
                 .attr('stroke', '#777')
                 .attr('stroke-opacity', 0.5)
-                .on("click", (event, d) => {
-                    this.link_edit = {
-                        id: d.id,
-                        is_active: d.is_active,
-                        type: d.type,
-                        weight: d.weight,
-                        source_id: d.source_id,
-                        target_id: d.target_id,
-                        description: d.description,
-                        time_created: d.time_created,
-                        is_show: true,
-                    };
-                });
+                .on("click", (event, d) => { this.select_link(d) });
 
             // Render the nodes
             const node = zoomGroup
@@ -201,21 +216,7 @@ createApp({
                 .attr('fill', '#ccc')
                 .attr('stroke', '#fff')
                 .attr('stroke-width', 1.5)
-                .on("click", (event, d) => {
-                    this.node_edit = {
-                        id: d.id,
-                        is_active: d.is_active,
-                        type: d.type,
-                        weight: d.weight,
-                        name: d.name,
-                        coord_x: d.fx,
-                        coord_y: d.fy,
-                        coord_z: d.coord_z,
-                        description: d.description,
-                        time_created: d.time_created,
-                        is_show: true,
-                    }
-                });
+                .on("click", (event, d) => { this.select_node(d) });
         
             const node_text = node
                 .append('text')
@@ -281,6 +282,34 @@ createApp({
                 zoomGroup.attr("transform", e.transform);
             }
         },
+        select_node(n) {
+            this.node_edit = {
+                id: n.id,
+                is_active: n.is_active,
+                type: n.type,
+                weight: n.weight,
+                name: n.name,
+                coord_x: n.fx,
+                coord_y: n.fy,
+                coord_z: n.coord_z,
+                description: n.description,
+                time_created: n.time_created,
+                is_show: true,
+            }
+        },
+        select_link(l) {
+            this.link_edit = {
+                id: l.id,
+                is_active: l.is_active,
+                type: l.type,
+                weight: l.weight,
+                source_id: l.source_id,
+                target_id: l.target_id,
+                description: l.description,
+                time_created: l.time_created,
+                is_show: true,
+            };
+        },
         update_node(node) {
             //console.log(node.is_active);
             let n = this.graph.nodes[this.nodes_index_map[node.id]];
@@ -294,6 +323,7 @@ createApp({
             n.fy = parseInt(node.coord_y);
             n.coord_z = parseInt(node.coord_z);
             n.description = node.description;
+            n.is_edited = true;
         },
         update_link(link) {
             //console.log(link.id);
@@ -306,6 +336,7 @@ createApp({
             l.target_id = link.target_id;
             l.target = this.graph.nodes[this.nodes_index_map[link.target_id]];
             l.description = link.description;
+            l.is_edited = true;
         },
         add_node(node) {
             //var replaced_node = this.graph.nodes[this.nodes_index_map[node.id]];
@@ -319,6 +350,7 @@ createApp({
                 coord_y: parseInt(node.coord_y),
                 coord_z: parseInt(node.coord_z),
                 description: node.description,
+                is_edited: true,
             };
 
             this.graph.nodes.push(replaced_node);
@@ -333,15 +365,30 @@ createApp({
                 source_id: parseInt(link.source_id),
                 target_id: parseInt(link.target_id),
                 description: link.description,
+                is_edited: true,
             };
-
+            
             this.graph.links.push(replaced_link);
             this.arise_info_popup('add link');
         },
         async save() {
             // TODO: finish
+            var update_nodes = this.graph.nodes.filter(node => 'is_edited' in node && node.is_edited);
+            var update_links = this.graph.links.filter(link => 'is_edited' in link && link.is_edited);
+            
+            console.log(update_nodes);
+            console.log(update_links);
 
-            this.arise_info_popup('Grapgh saved');
+            var upsert_nodes_is_success = await this.upsert_nodes(update_nodes);
+            var upsert_links_is_success = await this.upsert_links(update_links);
+            console.log(upsert_nodes_is_success);
+            console.log(upsert_links_is_success);
+
+            if (upsert_nodes_is_success && upsert_links_is_success) {
+                this.arise_info_popup('Grapgh saved');
+                await this.clear_plot();
+                this.init();
+            }
         },
         arise_error_popup(message) {
             this.error_popup_on = true;
