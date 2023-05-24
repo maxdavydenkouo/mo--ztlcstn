@@ -1,4 +1,4 @@
-# Description
+# description
 - zettelkasten concept implementation (POC)
 
 
@@ -13,6 +13,10 @@
 - obsidian with juggle add-on, but: "Warning: Juggl is not optimized for large graphs. We advise not to use the global graph if your vault
 contains more than 250 notes to prevent Obsidian from freezing." from juggl github [https://github.com/HEmile/juggl/blob/main/src/ui/settings/GlobalGraphModal.svelte]
 - vscode foam extention, but network manipulation functionality quite better, than in raw obsidian graph
+
+
+# demo
+- [http://140.238.222.53/services/ztlcstn/]
 
 
 # plan (POC)
