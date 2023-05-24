@@ -18,7 +18,7 @@ createApp({
                 coord_z: null,
                 description: null,
                 time_created: null,
-                is_show: null,
+                is_show: false,
             },
             link_edit: {
                 id: null,
@@ -29,7 +29,7 @@ createApp({
                 target_id: null,
                 description: null,
                 time_created: null,
-                is_show: null,
+                is_show: false,
             },
             nodes_index_map: {},
             links_index_map: {},
@@ -114,8 +114,8 @@ createApp({
             // ----------------------------------------
             // Config
             // TEMP: hardcode canvas size
-            const WIDTH = 900;      // window.innerWidth
-            const HEIGHT = 900;     // window.innerHeight
+            const WIDTH = 1300;      // window.innerWidth
+            const HEIGHT = 1300;     // window.innerHeight
 
             const NODE_RADIUS = 5;
             const TEXT_SIZE = 10;
@@ -196,7 +196,8 @@ createApp({
                 .append('line')
                 //.attr('class', 'link')
                 .attr('stroke', '#777')
-                .attr('stroke-opacity', 0.5)
+                .attr('stroke-width', 2)
+                .attr('stroke-opacity', 0.7)
                 .on("click", (event, d) => { this.select_link(d) });
 
             // Render the nodes

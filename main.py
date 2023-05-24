@@ -139,8 +139,8 @@ def generate_dummy_nodes(count):
         # set null coordinates for the half of nodes to test forse simulation
         cx = cy = None
         if random.randint(1,2) == 1:
-            cx = round(random.uniform(100, 800), 3) # hardcode coordinates related to canvas size
-            cy = round(random.uniform(100, 800), 3) # hardcode coordinates related to canvas size
+            cx = round(random.uniform(100, 1300), 3) # hardcode coordinates related to canvas size
+            cy = round(random.uniform(100, 1300), 3) # hardcode coordinates related to canvas size
 
         nodes.append({
             "id": i+1,

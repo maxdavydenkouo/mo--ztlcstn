@@ -3,10 +3,10 @@
 
 
 # principles
-- graph first - text second - visualizatoin and navigation through the map
-- nodes-linkes architecture - there are only nodes and links, between them
-- laconic data - store only valuable and informative information
-- middle field - [inner world]..............[xxxxx]..............[outer_world]
+- graph first - text second: navigation and data manipulation through the map
+- nodes-linkes architecture: there are only nodes and links (no additional data structures)
+- laconic data: store only valuable and informative information
+- middle field: [inner world]..............[xxxxx]..............[outer_world]
 
 
 # alternatives
@@ -46,11 +46,11 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
         - [x] link
 - [x] front_d3: crud - global save
 - [x] back: crud - multiple merge
-- [ ] front: refactor
 - [ ] back: testing
 - [ ] back: logging
 - [ ] front: wishes
     - [x] graph size limits test (10.000 nodes + 15.000 links - done (tangible but handable performance degradation))
+    - [ ] markdown text highlighting to the textfield
     - [ ] nodes size via value
     - [ ] colors via types (nodes + links)
     - [ ] beautify
@@ -66,7 +66,7 @@ contains more than 250 notes to prevent Obsidian from freezing." from juggl gith
 # ideas
 - [task] concept realization
 - [timeline] concept realization
-- [timeframe] можно реализоваться временнУю привязку данных к нодам, сформированным во временной ряд
+- [timeframe] to display plan and event
 
 
 # notes
