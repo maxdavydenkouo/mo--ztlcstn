@@ -11,7 +11,7 @@ from sqlalchemy import create_engine, Column, Integer, Float, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.sql import func
-
+import signal
 
 # ===============================================================================
 # config
@@ -330,8 +330,13 @@ def read_link(q: Union[str, None] = None, db: Session = Depends(get_db)):
     fill_dummy_data_to_db(db)
     return {"success": True,}
 
+@app.post("/shutdown")
+async def post_shutdown():
+    # HACK: shutdown service by request if it will needed
+    signal.raise_signal(signal.SIGTERM)
+
 
 # ===============================================================================
 # main
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    uvicorn.run(app, host="0.0.0.0", port=8081)
